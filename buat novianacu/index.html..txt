@@ -1,0 +1,808 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Khusus Untuk Noviana Kurniawati ??</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&family=Great+Vibes&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: linear-gradient(135deg, #fff0f3 0%, #ffccd5 50%, #ffb3c1 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+            color: #4a1525;
+        }
+
+        .font-serif-romantic {
+            font-family: 'Great Vibes', cursive;
+        }
+
+        .font-handwriting {
+            font-family: 'Dancing Script', cursive;
+        }
+
+        /* Canvas background overlay */
+        #petalCanvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 5;
+        }
+
+        /* Glassmorphism style */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.75);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            box-shadow: 0 20px 40px rgba(225, 29, 72, 0.12);
+        }
+
+        /* Vintage Envelope Animation */
+        .envelope-wrapper {
+            perspective: 1000px;
+        }
+
+        .envelope {
+            position: relative;
+            width: 300px;
+            height: 200px;
+            background: #f43f5e;
+            border-radius: 12px;
+            box-shadow: 0 15px 35px rgba(244, 63, 94, 0.3);
+            cursor: pointer;
+            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .envelope:hover {
+            transform: translateY(-8px) scale(1.02);
+        }
+
+        .envelope-flap {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 0;
+            height: 0;
+            border-left: 150px solid transparent;
+            border-right: 150px solid transparent;
+            border-top: 110px solid #e11d48;
+            transform-origin: top;
+            transition: transform 0.6s ease;
+            z-index: 3;
+        }
+
+        .envelope.open .envelope-flap {
+            transform: rotateX(180deg);
+        }
+
+        .envelope-pocket {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 0;
+            border-left: 150px solid #fb7185;
+            border-right: 150px solid #fb7185;
+            border-bottom: 100px solid #f43f5e;
+            border-radius: 0 0 12px 12px;
+            z-index: 2;
+        }
+
+        .envelope-letter {
+            position: absolute;
+            bottom: 10px;
+            left: 15px;
+            width: 270px;
+            height: 170px;
+            background: #fff;
+            border-radius: 8px;
+            transition: transform 0.8s ease 0.3s;
+            z-index: 1;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 15px;
+            text-align: center;
+        }
+
+        .envelope.open .envelope-letter {
+            transform: translateY(-120px) scale(1.05);
+            z-index: 4;
+        }
+
+        /* Glowing Pulse Animation */
+        @keyframes pulseGlow {
+            0%, 100% { box-shadow: 0 0 20px rgba(244, 63, 94, 0.4), 0 0 40px rgba(251, 113, 133, 0.2); }
+            50% { box-shadow: 0 0 35px rgba(244, 63, 94, 0.8), 0 0 60px rgba(251, 113, 133, 0.5); }
+        }
+
+        .glow-effect {
+            animation: pulseGlow 3s infinite ease-in-out;
+        }
+
+        /* Flower Bloom SVG Animations */
+        .flower-item {
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            cursor: pointer;
+        }
+
+        .flower-item:hover {
+            transform: scale(1.15) rotate(4deg);
+            filter: drop-shadow(0 10px 15px rgba(225, 29, 72, 0.3));
+        }
+
+        .sparkle-star {
+            position: absolute;
+            animation: floatSparkle 2s infinite ease-in-out alternate;
+            pointer-events: none;
+        }
+
+        @keyframes floatSparkle {
+            0% { transform: translateY(0) scale(0.8) rotate(0deg); opacity: 0.5; }
+            100% { transform: translateY(-12px) scale(1.2) rotate(45deg); opacity: 1; }
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #ffe4e6;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #fb7185;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body class="relative flex flex-col min-h-screen justify-between items-center px-4 py-6">
+
+    <!-- Falling Petals Canvas -->
+    <canvas id="petalCanvas"></canvas>
+
+    <!-- Floating Audio Control Widget -->
+    <div class="fixed top-4 right-4 z-50">
+        <button id="musicToggleBtn" onclick="toggleAudio()" class="flex items-center gap-2 bg-white/80 backdrop-blur-md px-4 py-2.5 rounded-full shadow-lg border border-rose-200 text-rose-600 font-medium hover:bg-rose-50 transition-all active:scale-95">
+            <i id="musicIcon" class="fas fa-music animate-spin text-lg" style="animation-duration: 4s;"></i>
+            <span id="musicText" class="text-xs sm:text-sm font-semibold">Shape of My Heart (Instrumental)</span>
+        </button>
+    </div>
+
+    <main class="w-full max-w-3xl mx-auto flex-1 flex flex-col items-center justify-center z-10 py-8">
+        
+        <!-- Header Title -->
+        <header class="text-center mb-8 animate-fade-in">
+            <span class="inline-block px-4 py-1.5 rounded-full bg-rose-100/80 text-rose-600 text-xs sm:text-sm font-semibold tracking-wider uppercase mb-2 border border-rose-200 shadow-sm">
+                ? Special Dedicated Web Page ?
+            </span>
+            <h1 class="text-4xl sm:text-6xl font-serif-romantic text-rose-600 font-bold tracking-wide drop-shadow-sm">
+                Noviana Kurniawati
+            </h1>
+            <p class="text-rose-500 font-medium text-sm sm:text-base mt-1">
+                "Cinta sejati bukan tentang seberapa lama, tapi tentang seberapa dalam perasaannya."
+            </p>
+        </header>
+
+        <!-- SECTION 1: INTERACTIVE QUIZ -->
+        <section id="quizSection" class="w-full glass-card rounded-3xl p-6 sm:p-8 text-center transition-all duration-500 relative overflow-hidden">
+            <div class="absolute -top-10 -left-10 w-32 h-32 bg-rose-300/30 rounded-full blur-2xl"></div>
+            <div class="absolute -bottom-10 -right-10 w-32 h-32 bg-pink-300/30 rounded-full blur-2xl"></div>
+
+            <div class="mb-6">
+                <span id="quizStepBadge" class="text-xs font-bold text-rose-500 bg-rose-100 px-3 py-1 rounded-full uppercase tracking-widest">
+                    Pertanyaan 1 dari 3
+                </span>
+                <h2 id="quizQuestionText" class="text-xl sm:text-2xl font-bold text-rose-900 mt-4 leading-relaxed">
+                    <!-- Text will be filled dynamically -->
+                </h2>
+                <p class="text-rose-600/80 italic text-xs sm:text-sm mt-1 font-handwriting text-lg">
+                    coba jawab viacu my sweetheart ??
+                </p>
+            </div>
+
+            <!-- Quiz Options Container -->
+            <div id="quizOptionsContainer" class="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 my-6">
+                <!-- Buttons dynamically loaded -->
+            </div>
+
+            <!-- Interactive Feedback Toast -->
+            <div id="quizFeedback" class="hidden p-3 rounded-2xl text-xs sm:text-sm font-semibold transition-all"></div>
+        </section>
+
+        <!-- SECTION 2: SECRET ENVELOPE -->
+        <section id="envelopeSection" class="hidden w-full flex flex-col items-center text-center animate-fade-in">
+            <div class="mb-6">
+                <h2 class="text-2xl sm:text-3xl font-bold text-rose-800 font-handwriting">
+                    Selamat, Semua Jawabanmu Benar Sayang! ??
+                </h2>
+                <p class="text-rose-600 text-sm mt-1">
+                    Ketuk amplop di bawah ini untuk membuka Surat Cinta Rahasia khusus untukmu:
+                </p>
+            </div>
+
+            <div class="envelope-wrapper my-8">
+                <div id="envelope" class="envelope glow-effect" onclick="openEnvelope()">
+                    <div class="envelope-flap"></div>
+                    <div class="envelope-pocket"></div>
+                    <div class="envelope-letter text-rose-800">
+                        <div>
+                            <i class="fas fa-heart text-2xl text-rose-500 mb-1 animate-bounce"></i>
+                            <p class="font-handwriting text-lg font-bold">Untuk Viacu My Sweetheart,</p>
+                            <p class="text-xs text-rose-600">Noviana Kurniawati</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <p class="text-xs text-rose-500 italic mt-2 animate-pulse">
+                ?? Klik pada amplop merah untuk membukanya!
+            </p>
+        </section>
+
+        <!-- SECTION 3: GRAND ROMANTIC BOUQUET -->
+        <section id="bouquetSection" class="hidden w-full glass-card rounded-3xl p-6 sm:p-10 text-center animate-fade-in relative">
+            
+            <div class="mb-6">
+                <h2 class="text-3xl sm:text-4xl font-serif-romantic font-bold text-rose-600">
+                    Buket Bunga Paling Bernilai Dalam Sejarah
+                </h2>
+                <p class="text-rose-700 text-xs sm:text-sm mt-2 max-w-lg mx-auto">
+                    Koleksi bunga paling indah dan langka ini dirangkai khusus untuk **Noviana Kurniawati**. Klik pada salah satu bunga untuk membaca makna & filosofi romantisnya!
+                </p>
+            </div>
+
+            <!-- Bouquet Graphic Box -->
+            <div class="relative w-full max-w-lg mx-auto bg-gradient-to-b from-rose-50/50 to-pink-100/60 rounded-3xl p-6 sm:p-8 border border-white/80 shadow-inner flex flex-col items-center">
+                
+                <!-- Sparkle Effects -->
+                <i class="fas fa-sparkles sparkle-star text-amber-400 text-xl top-4 left-6"></i>
+                <i class="fas fa-star sparkle-star text-pink-400 text-sm top-12 right-8"></i>
+                <i class="fas fa-heart sparkle-star text-rose-400 text-xs bottom-16 left-8"></i>
+
+                <!-- Flowers Grid Layout inside Bouquet -->
+                <div class="grid grid-cols-3 gap-4 sm:gap-6 w-full mb-6 z-10">
+                    
+                    <!-- 1. Red Rose -->
+                    <div class="flower-item flex flex-col items-center" onclick="showFlowerModal('redRose')">
+                        <div class="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-rose-100 border-2 border-rose-300 flex items-center justify-center shadow-md">
+                            <svg class="w-10 h-10 sm:w-12 sm:h-12 text-rose-600" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M12 2C9.24 2 7 4.24 7 7c0 2.85 1.9 5.25 4.5 5.86V21h1v-8.14C15.1 12.25 17 9.85 17 7c0-2.76-2.24-5-5-5zm0 8.5c-1.93 0-3.5-1.57-3.5-3.5S10.07 3.5 12 3.5s3.5 1.57 3.5 3.5-1.57 3.5-3.5 3.5z"/>
+                                <path d="M12 4.5c-1.38 0-2.5 1.12-2.5 2.5s1.12 2.5 2.5 2.5 2.5-1.12 2.5-2.5-1.12-2.5-2.5-2.5z" opacity="0.6"/>
+                            </svg>
+                        </div>
+                        <span class="text-xs font-bold text-rose-800 mt-2">Mawar Merah</span>
+                    </div>
+
+                    <!-- 2. Juliet Rose (Most Valuable) -->
+                    <div class="flower-item flex flex-col items-center relative" onclick="showFlowerModal('julietRose')">
+                        <span class="absolute -top-2 bg-amber-400 text-amber-950 text-[9px] font-black px-2 py-0.5 rounded-full shadow-sm">
+                            ? Termahal
+                        </span>
+                        <div class="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-amber-50 border-2 border-amber-300 flex items-center justify-center shadow-md">
+                            <svg class="w-10 h-10 sm:w-12 sm:h-12 text-amber-500" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M12 2a8 8 0 00-8 8c0 5.25 8 12 8 12s8-6.75 8-12a8 8 0 00-8-8zm0 11a3 3 0 110-6 3 3 0 010 6z"/>
+                            </svg>
+                        </div>
+                        <span class="text-xs font-bold text-amber-900 mt-2">Juliet Rose</span>
+                    </div>
+
+                    <!-- 3. Pink Peony -->
+                    <div class="flower-item flex flex-col items-center" onclick="showFlowerModal('peony')">
+                        <div class="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-pink-100 border-2 border-pink-300 flex items-center justify-center shadow-md">
+                            <svg class="w-10 h-10 sm:w-12 sm:h-12 text-pink-500" viewBox="0 0 24 24" fill="currentColor">
+                                <circle cx="12" cy="12" r="8"/>
+                                <path d="M12 2a10 10 0 100 20 10 10 0 000-20zm0 18a8 8 0 110-16 8 8 0 010 16z" opacity="0.4"/>
+                            </svg>
+                        </div>
+                        <span class="text-xs font-bold text-pink-800 mt-2">Pink Peony</span>
+                    </div>
+
+                    <!-- 4. Tulip Merah/Pink -->
+                    <div class="flower-item flex flex-col items-center" onclick="showFlowerModal('tulip')">
+                        <div class="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-rose-100 border-2 border-rose-300 flex items-center justify-center shadow-md">
+                            <svg class="w-10 h-10 sm:w-12 sm:h-12 text-rose-500" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M12 2C9 2 6.5 4.5 6.5 8c0 4 5.5 10 5.5 10s5.5-6 5.5-10c0-3.5-2.5-6-5.5-6zm0 10c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2z"/>
+                            </svg>
+                        </div>
+                        <span class="text-xs font-bold text-rose-800 mt-2">Tulip Romantis</span>
+                    </div>
+
+                    <!-- 5. Baby's Breath -->
+                    <div class="flower-item flex flex-col items-center" onclick="showFlowerModal('babysBreath')">
+                        <div class="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-slate-50 border-2 border-slate-200 flex items-center justify-center shadow-md">
+                            <svg class="w-10 h-10 sm:w-12 sm:h-12 text-slate-400" viewBox="0 0 24 24" fill="currentColor">
+                                <circle cx="8" cy="8" r="3"/>
+                                <circle cx="16" cy="8" r="3"/>
+                                <circle cx="12" cy="15" r="4"/>
+                            </svg>
+                        </div>
+                        <span class="text-xs font-bold text-slate-700 mt-2">Baby's Breath</span>
+                    </div>
+
+                    <!-- 6. Forget-Me-Not -->
+                    <div class="flower-item flex flex-col items-center" onclick="showFlowerModal('forgetMeNot')">
+                        <div class="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-sky-100 border-2 border-sky-300 flex items-center justify-center shadow-md">
+                            <svg class="w-10 h-10 sm:w-12 sm:h-12 text-sky-500" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M12 4.5C10 2.5 6.5 2.5 4.5 4.5s-2 5.5 0 7.5L12 19.5l7.5-7.5c2-2 2-5.5 0-7.5s-5.5-2-7.5 0z"/>
+                            </svg>
+                        </div>
+                        <span class="text-xs font-bold text-sky-800 mt-2">Forget-Me-Not</span>
+                    </div>
+
+                </div>
+
+                <!-- Decorative Bouquet Ribbon Base -->
+                <div class="w-36 h-12 bg-rose-500 rounded-b-2xl shadow-lg border-t-2 border-rose-300 flex items-center justify-center relative">
+                    <div class="w-8 h-8 bg-amber-300 rounded-full border-2 border-white shadow-inner flex items-center justify-center">
+                        <i class="fas fa-heart text-rose-600 text-xs"></i>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="mt-8 pt-6 border-t border-rose-200/60">
+                <p class="font-handwriting text-2xl text-rose-700">
+                    "Satu buket bunga ini takkan pernah layu, seperti cintaku padamu."
+                </p>
+                <p class="text-xs text-rose-500 font-medium mt-1">
+                    Selamanya milikmu, Viacu My Sweetheart ??
+                </p>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- FLOWER PHILOSOPHY MODAL -->
+    <div id="flowerModal" class="fixed inset-0 bg-slate-900/40 backdrop-blur-md z-50 flex items-center justify-center p-4 hidden opacity-0 transition-opacity duration-300">
+        <div class="glass-card max-w-md w-full rounded-3xl p-6 sm:p-8 relative shadow-2xl border border-white/80 transform scale-95 transition-transform duration-300" id="flowerModalCard">
+            
+            <button onclick="closeFlowerModal()" class="absolute top-4 right-4 w-9 h-9 rounded-full bg-rose-100 text-rose-600 flex items-center justify-center hover:bg-rose-200 transition-colors">
+                <i class="fas fa-times"></i>
+            </button>
+
+            <div class="text-center">
+                <div id="modalIconContainer" class="w-20 h-20 mx-auto rounded-full flex items-center justify-center mb-4 border-2 shadow-inner">
+                    <!-- Dynamic Icon -->
+                </div>
+
+                <span id="modalBadge" class="text-[10px] font-extrabold uppercase px-3 py-1 rounded-full tracking-wider">
+                    <!-- Dynamic Badge -->
+                </span>
+
+                <h3 id="modalTitle" class="text-2xl font-bold text-rose-900 mt-2">
+                    <!-- Dynamic Title -->
+                </h3>
+
+                <p id="modalPhilosophy" class="text-rose-700/90 text-sm mt-3 leading-relaxed text-justify">
+                    <!-- Dynamic Text -->
+                </p>
+
+                <div class="mt-6 pt-4 border-t border-rose-200/80 bg-rose-50/50 rounded-2xl p-3">
+                    <p class="text-xs font-semibold text-rose-800 italic" id="modalLoveQuote">
+                        <!-- Dynamic Quote -->
+                    </p>
+                </div>
+
+                <button onclick="closeFlowerModal()" class="mt-6 w-full py-3 bg-gradient-to-r from-rose-500 to-pink-500 text-white font-bold rounded-2xl shadow-md hover:from-rose-600 hover:to-pink-600 transition-all active:scale-95">
+                    Tutup & Simpan Di Hati ?
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- SECRET LETTER FULLSCREEN MODAL -->
+    <div id="letterModal" class="fixed inset-0 bg-rose-950/50 backdrop-blur-md z-50 flex items-center justify-center p-4 hidden opacity-0 transition-opacity duration-300">
+        <div class="bg-amber-50 max-w-lg w-full rounded-3xl p-6 sm:p-8 relative shadow-2xl border-2 border-amber-200 text-rose-900 transform scale-95 transition-transform duration-300">
+            <div class="text-center mb-4 border-b border-amber-200 pb-4">
+                <span class="text-xs font-bold text-rose-500 uppercase tracking-widest">Surat Cinta Rahasia</span>
+                <h3 class="text-3xl font-serif-romantic font-bold text-rose-600 mt-1">Untuk Viacu My Sweetheart</h3>
+                <p class="text-xs text-rose-400 font-semibold">Noviana Kurniawati</p>
+            </div>
+
+            <div class="space-y-3 text-xs sm:text-sm leading-relaxed font-medium text-rose-800 text-justify max-h-[50vh] overflow-y-auto px-2">
+                <p>
+                    Halo manisku, <strong>Noviana Kurniawati</strong>...
+                </p>
+                <p>
+                    Terima kasih telah hadir dan memberikan warna indah dalam hidupku. Setiap detik bersamamu adalah hadiah yang sangat berharga. Web kecil ini dibuat khusus untukmu, sebagai bukti betapa dalamnya perasaanku.
+                </p>
+                <p>
+                    Di dalam surat ini, aku telah menyiapkan rangkaian <strong>buket bunga paling bernilai dan paling romantis dalam sejarah dunia</strong>. Setiap bunganya memiliki makna khusus yang menggambarkan keindahan dirimu dan keabadian cinta kita.
+                </p>
+                <p class="font-handwriting text-xl text-rose-600 text-center py-2">
+                    "Kamu adalah bunga terindah yang pernah mekar di hatiku."
+                </p>
+            </div>
+
+            <button onclick="revealBouquet()" class="mt-6 w-full py-3 bg-rose-600 text-white font-bold rounded-2xl shadow-lg hover:bg-rose-700 transition-all active:scale-95 flex items-center justify-center gap-2">
+                <span>Lihat Buket Bunga Spesialmu</span>
+                <i class="fas fa-arrow-right"></i>
+            </button>
+        </div>
+    </div>
+
+    <footer class="text-center text-xs text-rose-500/80 font-medium py-4 z-10">
+        Dibuat dengan segenap cinta ?? Khusus untuk <span class="font-bold">Noviana Kurniawati</span>
+    </footer>
+
+    <script>
+        /* -------------------------------------------------------------
+           1. AUDIO SYNTHESIZER (Shape of My Heart Acoustic Style)
+           ------------------------------------------------------------- */
+        let audioCtx = null;
+        let isPlaying = false;
+        let audioInterval = null;
+
+        const melodyNotes = [
+            261.63, 293.66, 329.63, 349.23, 392.00, 440.00, 493.88, 523.25
+        ];
+
+        function initAudio() {
+            if (!audioCtx) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            }
+        }
+
+        function playAcousticNote(freq, duration = 1.2) {
+            if (!audioCtx || audioCtx.state !== 'running') return;
+
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+
+            gain.gain.setValueAtTime(0.15, audioCtx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + duration);
+
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+
+            osc.start();
+            osc.stop(audioCtx.currentTime + duration);
+        }
+
+        function startRomanticMelody() {
+            let noteIdx = 0;
+            const arpeggioPattern = [329.63, 392.00, 440.00, 493.88, 523.25, 493.88, 440.00, 392.00];
+            
+            audioInterval = setInterval(() => {
+                if (isPlaying && audioCtx && audioCtx.state === 'running') {
+                    playAcousticNote(arpeggioPattern[noteIdx % arpeggioPattern.length], 1.5);
+                    noteIdx++;
+                }
+            }, 600);
+        }
+
+        function toggleAudio() {
+            initAudio();
+            const icon = document.getElementById('musicIcon');
+            const text = document.getElementById('musicText');
+
+            if (audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+
+            if (!isPlaying) {
+                isPlaying = true;
+                icon.className = "fas fa-music animate-spin text-lg";
+                text.innerText = "Shape of My Heart (Playing)";
+                startRomanticMelody();
+            } else {
+                isPlaying = false;
+                clearInterval(audioInterval);
+                icon.className = "fas fa-volume-mute text-lg";
+                text.innerText = "Musik Di-pause";
+            }
+        }
+
+        /* -------------------------------------------------------------
+           2. INTERACTIVE QUIZ DATA & LOGIC
+           ------------------------------------------------------------- */
+        const quizData = [
+            {
+                question: "Di antara semua hal indah di dunia ini, apa yang paling membuat hatiku selalu bahagia?",
+                options: [
+                    { text: "Senyuman manis Noviana Kurniawati", correct: true },
+                    { text: "Pemandangan malam hari", correct: false },
+                    { text: "Segelas kopi hangat", correct: false },
+                    { text: "Lagu favorit di radio", correct: false }
+                ],
+                feedback: "Benar sekali manisku! Senyumanmu adalah alasan utamaku bahagia ??"
+            },
+            {
+                question: "Seberapa besar nilai dirimu dan rasa cintaku padamu setiap harinya?",
+                options: [
+                    { text: "Biasa saja", correct: false },
+                    { text: "Sangat besar tak terhingga sepanjang masa", correct: true },
+                    { text: "Hanya sebatas kata-kata", correct: false },
+                    { text: "Sama seperti yang lain", correct: false }
+                ],
+                feedback: "Tepat sekali! Cintaku padamu takkan pernah terbatas oleh waktu ??"
+            },
+            {
+                question: "Siapakah satu-satunya pemilik hati dan bunga paling cantik di dunia ini?",
+                options: [
+                    { text: "Bintang di langit", correct: false },
+                    { text: "Putri dalam dongeng", correct: false },
+                    { text: "Viacu My Sweetheart (Noviana Kurniawati)", correct: true },
+                    { text: "Bunga di taman", correct: false }
+                ],
+                feedback: "100% Benar! Kamu adalah satu-satunya ratu di hatiku ??"
+            }
+        ];
+
+        let currentQuizIndex = 0;
+
+        function loadQuizStep() {
+            const currentQuiz = quizData[currentQuizIndex];
+            document.getElementById('quizStepBadge').innerText = `Pertanyaan ${currentQuizIndex + 1} dari ${quizData.length}`;
+            document.getElementById('quizQuestionText').innerText = currentQuiz.question;
+            
+            const optionsContainer = document.getElementById('quizOptionsContainer');
+            optionsContainer.innerHTML = '';
+
+            currentQuiz.options.forEach(option => {
+                const btn = document.createElement('button');
+                btn.className = "w-full py-3.5 px-4 rounded-2xl bg-white/90 border border-rose-200 text-rose-800 font-semibold text-xs sm:text-sm hover:bg-rose-500 hover:text-white hover:border-rose-500 transition-all shadow-sm active:scale-95 text-left flex items-center justify-between group";
+                btn.innerHTML = `
+                    <span>${option.text}</span>
+                    <i class="fas fa-heart text-rose-300 group-hover:text-white transition-colors"></i>
+                `;
+                btn.onclick = () => handleAnswer(option.correct, currentQuiz.feedback);
+                optionsContainer.appendChild(btn);
+            });
+        }
+
+        function handleAnswer(isCorrect, feedbackMessage) {
+            const feedbackEl = document.getElementById('quizFeedback');
+            feedbackEl.classList.remove('hidden', 'bg-emerald-100', 'text-emerald-800', 'bg-rose-100', 'text-rose-800');
+
+            if (isCorrect) {
+                feedbackEl.classList.add('bg-emerald-100', 'text-emerald-800');
+                feedbackEl.innerHTML = `<i class="fas fa-check-circle mr-1"></i> ${feedbackMessage}`;
+                feedbackEl.classList.remove('hidden');
+
+                setTimeout(() => {
+                    feedbackEl.classList.add('hidden');
+                    currentQuizIndex++;
+                    if (currentQuizIndex < quizData.length) {
+                        loadQuizStep();
+                    } else {
+                        // Quiz Finished -> Transition to Envelope
+                        document.getElementById('quizSection').classList.add('hidden');
+                        document.getElementById('envelopeSection').classList.remove('hidden');
+                    }
+                }, 1400);
+            } else {
+                feedbackEl.classList.add('bg-rose-100', 'text-rose-800');
+                feedbackEl.innerHTML = `<i class="fas fa-times-circle mr-1"></i> Opss, coba tebak lagi viacu my sweetheart! ??`;
+                feedbackEl.classList.remove('hidden');
+            }
+        }
+
+        /* -------------------------------------------------------------
+           3. ENVELOPE & SECRET LETTER MODAL LOGIC
+           ------------------------------------------------------------- */
+        function openEnvelope() {
+            const env = document.getElementById('envelope');
+            env.classList.add('open');
+            
+            setTimeout(() => {
+                const letterModal = document.getElementById('letterModal');
+                letterModal.classList.remove('hidden');
+                setTimeout(() => {
+                    letterModal.classList.remove('opacity-0');
+                    letterModal.querySelector('div').classList.remove('scale-95');
+                }, 50);
+            }, 800);
+        }
+
+        function revealBouquet() {
+            const letterModal = document.getElementById('letterModal');
+            letterModal.classList.add('opacity-0');
+            letterModal.querySelector('div').classList.add('scale-95');
+
+            setTimeout(() => {
+                letterModal.classList.add('hidden');
+                document.getElementById('envelopeSection').classList.add('hidden');
+                document.getElementById('bouquetSection').classList.remove('hidden');
+            }, 300);
+        }
+
+        /* -------------------------------------------------------------
+           4. FLOWER PHILOSOPHIES DATA & MODAL LOGIC
+           ------------------------------------------------------------- */
+        const flowerDetails = {
+            redRose: {
+                title: "Red Rose (Mawar Merah)",
+                badge: "Simbol Cinta Sejati",
+                badgeBg: "bg-rose-100 text-rose-700",
+                iconClass: "fas fa-rose text-rose-600 text-4xl",
+                iconBg: "bg-rose-50 border-rose-300",
+                philosophy: "Mawar Merah adalah simbol cinta klasik yang tak pernah lekang oleh waktu. Dalam sejarah romansa dunia, Mawar Merah melambangkan hasrat mendalam, rasa hormat, dan komitmen cinta sejati yang tak tergoyahkan. Warna merahnya mewakili detak jantung yang selalu bergelora untukmu.",
+                quote: "“Seperti mawar merah yang mekar, cintaku padamu selalu segar dan penuh kehangatan.”"
+            },
+            julietRose: {
+                title: "Juliet Rose (Mawar Juliet)",
+                badge: "Bunga Termahal Dalam Sejarah ($15.8 Juta)",
+                badgeBg: "bg-amber-100 text-amber-800",
+                iconClass: "fas fa-crown text-amber-500 text-4xl",
+                iconBg: "bg-amber-50 border-amber-300",
+                philosophy: "Diacui sebagai bunga paling bernilai dan termahal sepanjang sejarah dunia (membutuhkan waktu 15 tahun untuk dibudidayakan oleh David Austin). Mawar Juliet melambangkan betapa berharganya dirimu bagi diriku. Kamu adalah keindahan langka yang tak bisa dinilai dengan apapun di dunia ini.",
+                quote: "“Kamu adalah Mawar Juliet di hidupku—begitu berharga, bernilai, dan tak tertandingi.”"
+            },
+            peony: {
+                title: "Pink Peony (Peony Merah Muda)",
+                badge: "Keberuntungan & Kemewahan Cinta",
+                badgeBg: "bg-pink-100 text-pink-700",
+                iconClass: "fas fa-spa text-pink-500 text-4xl",
+                iconBg: "bg-pink-50 border-pink-300",
+                philosophy: "Dalam mitologi dan tradisi kerajaan kuno, Peony melambangkan pernikahan yang bahagia, keberuntungan, kehormatan, dan kasih sayang yang melimpah. Kelopaknya yang rimbun mewakili kehangatan dan kebahagiaan yang meluap setiap kali aku bersamamu.",
+                quote: "“Melihatmu senyum bagaikan Peony mekar di pagi hari—membawa kedamaian dan kebahagiaan.”"
+            },
+            tulip: {
+                title: "Tulip Romantis",
+                badge: "Deklarasi Cinta Sempurna",
+                badgeBg: "bg-rose-100 text-rose-700",
+                iconClass: "fas fa-seedling text-rose-500 text-4xl",
+                iconBg: "bg-rose-50 border-rose-300",
+                philosophy: "Tulip adalah simbol keanggunan dan deklarasi cinta yang sempurna. Pusat hitam pada bunga Tulip melambangkan hati pecinta yang terbakar oleh rasa cinta. Memberikan Tulip berarti menyatakan bahwa cintaku padamu sangat murni dan tulus.",
+                quote: "“Bersamamu adalah bentuk kesempurnaan cinta yang selalu kubayangkan.”"
+            },
+            babysBreath: {
+                title: "Baby's Breath (Gypsophila)",
+                badge: "Ketulusan & Ketabahan Cinta",
+                badgeBg: "bg-slate-100 text-slate-700",
+                iconClass: "fas fa-snowflake text-slate-400 text-4xl",
+                iconBg: "bg-slate-50 border-slate-300",
+                philosophy: "Bunga-bunga kecil putih yang lembut ini melambangkan kesucian hati, ketulusan, dan cinta abadi yang tak pernah pudar. Baby's Breath mengingatkan kita bahwa kebahagiaan sejati sering hadir dari perhatian-perhatian kecil yang tulus setiap harinya.",
+                quote: "“Kesederhanaan dan ketulusan cintamu adalah hal terindah yang kuterima.”"
+            },
+            forgetMeNot: {
+                title: "Forget-Me-Not (Bunga Kenangan Abadi)",
+                badge: "Cinta Yang Tak Mungking Dilupakan",
+                badgeBg: "bg-sky-100 text-sky-700",
+                iconClass: "fas fa-heart text-sky-500 text-4xl",
+                iconBg: "bg-sky-50 border-sky-300",
+                philosophy: "Memiliki sejarah legendaris tentang kesetiaan. Bunga biru mungil ini melambangkan kenangan indah yang diukir bersama dan ikatan batin yang takkan pernah terputus, sejauh apapun jarak memisahkan.",
+                quote: "“Tak ada satu detik pun namamu terlupakan dari setiap doa dan napasku.”"
+            }
+        };
+
+        function showFlowerModal(flowerKey) {
+            const data = flowerDetails[flowerKey];
+            if (!data) return;
+
+            document.getElementById('modalTitle').innerText = data.title;
+            
+            const badge = document.getElementById('modalBadge');
+            badge.innerText = data.badge;
+            badge.className = `text-[10px] font-extrabold uppercase px-3 py-1 rounded-full tracking-wider ${data.badgeBg}`;
+
+            const iconContainer = document.getElementById('modalIconContainer');
+            iconContainer.className = `w-20 h-20 mx-auto rounded-full flex items-center justify-center mb-4 border-2 shadow-inner ${data.iconBg}`;
+            iconContainer.innerHTML = `<i class="${data.iconClass}"></i>`;
+
+            document.getElementById('modalPhilosophy').innerText = data.philosophy;
+            document.getElementById('modalLoveQuote').innerText = data.quote;
+
+            const modal = document.getElementById('flowerModal');
+            const card = document.getElementById('flowerModalCard');
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                modal.classList.remove('opacity-0');
+                card.classList.remove('scale-95');
+            }, 50);
+        }
+
+        function closeFlowerModal() {
+            const modal = document.getElementById('flowerModal');
+            const card = document.getElementById('flowerModalCard');
+            modal.classList.add('opacity-0');
+            card.classList.add('scale-95');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+            }, 300);
+        }
+
+        /* -------------------------------------------------------------
+           5. FALLING PETALS HTML5 CANVAS ANIMATION
+           ------------------------------------------------------------- */
+        const canvas = document.getElementById('petalCanvas');
+        const ctx = canvas.getContext('2d');
+
+        let width = canvas.width = window.innerWidth;
+        let height = canvas.height = window.innerHeight;
+
+        window.addEventListener('resize', () => {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+        });
+
+        class Petal {
+            constructor() {
+                this.reset();
+            }
+
+            reset() {
+                this.x = Math.random() * width;
+                this.y = Math.random() * -height;
+                this.size = Math.random() * 12 + 8;
+                this.speedY = Math.random() * 1.5 + 0.8;
+                this.speedX = Math.random() * 1 - 0.5;
+                this.rotation = Math.random() * 360;
+                this.rotationSpeed = Math.random() * 2 - 1;
+                this.color = ['#f43f5e', '#fb7185', '#fda4af', '#fecdd3'][Math.floor(Math.random() * 4)];
+                this.opacity = Math.random() * 0.7 + 0.3;
+            }
+
+            update() {
+                this.y += this.speedY;
+                this.x += Math.sin(this.y * 0.01) + this.speedX;
+                this.rotation += this.rotationSpeed;
+
+                if (this.y > height + 20) {
+                    this.reset();
+                }
+            }
+
+            draw() {
+                ctx.save();
+                ctx.translate(this.x, this.y);
+                ctx.rotate((this.rotation * Math.PI) / 180);
+                ctx.globalAlpha = this.opacity;
+                ctx.fillStyle = this.color;
+                
+                // Draw petal curve
+                ctx.beginPath();
+                ctx.moveTo(0, 0);
+                ctx.bezierCurveTo(-this.size, -this.size / 2, -this.size, this.size, 0, this.size * 1.5);
+                ctx.bezierCurveTo(this.size, this.size, this.size, -this.size / 2, 0, 0);
+                ctx.fill();
+
+                ctx.restore();
+            }
+        }
+
+        const petals = Array.from({ length: 35 }, () => new Petal());
+
+        function animatePetals() {
+            ctx.clearRect(0, 0, width, height);
+            petals.forEach(petal => {
+                petal.update();
+                petal.draw();
+            });
+            requestAnimationFrame(animatePetals);
+        }
+
+        /* -------------------------------------------------------------
+           INITIALIZATION ON PAGE LOAD
+           ------------------------------------------------------------- */
+        window.onload = function() {
+            loadQuizStep();
+            animatePetals();
+            
+            // Auto play audio setup on first touch
+            document.body.addEventListener('click', function firstClickAudio() {
+                initAudio();
+                document.body.removeEventListener('click', firstClickAudio);
+            }, { once: true });
+        };
+    </script>
+</body>
+</html>
